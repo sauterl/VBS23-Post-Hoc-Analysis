@@ -1,0 +1,8 @@
+uid,name,group,duration,hint,started,ended
+d5923817-c337-495a-be43-a7e5ef148311,vbs23-avs1,AVS,300,Find indoor shots of three or more people sitting around the same table with food on it.,1673259983533,1673260288537
+e215892d-bce6-4920-a036-2f7590666ea4,vbs23-avs2,AVS,300,"Find shots of only one person either riding a horse or riding a horse-drawn cart, without other people visible.",1673261890411,1673262195419
+753fb6ee-2472-4d8d-93c0-2ef8e448b5b5,vbs23-avs3,AVS,300,"Find shots of an adult person running in an (sub-)urban street. Cars may be visible, but no other persons walking or running.",1673263415712,1673263720714
+327f73cb-3856-4207-af2b-c60522af48e4,vbs23-avs4,AVS,300,"Find shots of one or more adult persons holding, releasing, throwing or playing with a balloon of any shape. Balls of any kind are not balloons, air balloons are not included.",1673264852327,1673265157334
+3786dbe7-1cc3-40a8-8c83-7e987b747089,vbs23-avs5,AVS,300,Find shots showing at least one person singing and at least one drummer (not necessarily playing the drums at that moment).,1673275613581,1673275918581
+1e336dec-c933-44e9-9c88-f0de5f9457fc,vbs23-avs6,AVS,300,"Find shots taken by a paraglider or parachuter, where their shadow (the glider and/or the person) is visible on the ground or water.",1673276771184,1673277076188
+d5571727-602c-4183-8baa-c9234d70b35e,vbs23-avs7,AVS,300,Find shots showing a bar chart (vertical or horizontal bars).,1673278166047,1673278471050
