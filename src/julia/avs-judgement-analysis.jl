@@ -29,6 +29,7 @@ boxplot!(ax, juds.stask.refs, juds.deltaJudge);
 save("plots/avs-judgement-time-judging.pdf", fig);
 
 # Time between judgement request and deliver (should be small)
+fig = Figure();
 ax = Axis(fig[1,1],
 xticks = ( # x ticks
 1:length(levels(juds.stask)), # numerical version of xticks, basically indices for label (next argument)
@@ -41,6 +42,7 @@ boxplot!(ax, juds.stask.refs, juds.deltaPrep);
 save("plots/avs-judgement-time-preparing.pdf", fig);
 
 # Total time between submission and verdict
+fig = Figure();
 ax = Axis(fig[1,1],
 xticks = ( # x ticks
 1:length(levels(juds.stask)), # numerical version of xticks, basically indices for label (next argument)

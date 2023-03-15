@@ -1,4 +1,4 @@
-using CSV, DataFrames, CairoMakie, CategoricalArrays;
+using CSV, DataFrames, CairoMakie, CategoricalArrays, Statistics;
 using ColorSchemes, ColorBrewer;
 
 subs = DataFrame(CSV.File("data/processed/avs-submissions.csv"));
@@ -6,7 +6,7 @@ subs = DataFrame(CSV.File("data/processed/avs-submissions.csv"));
 # ---------------------------------------------------
 # Analysis ratios of submisisons per team (like in 2022)
 # ---------------------------------------------------
-# Group by task and team, count (nrow) and get the unique values on task and team
+# Group by task and team, count (nrow) and get the unique values on task and team. See https://dataframes.juliadata.org/stable/lib/functions/#DataFrames.combine or https://juliadatascience.io/groupby_combine
 subsPerTaskTeam = unique(combine(groupby(subs, [:task, :team]), :, nrow), [:task, :team]);
 # Sum up to get the total of the submissions per task and rename to sum
 totals = combine(groupby(subsPerTaskTeam, [:task]), :nrow .=> sum => :sum);
@@ -99,3 +99,16 @@ reverse(teams),     # The labels, i.e. the teams
 
 # Saving the plot on disk using default size measurements
 save("plots/avs-team-ratios-correct.pdf", cfig);
+
+# ---------------------------------------------------
+# Analysis of unique submissions
+# ---------------------------------------------------
+# Group by task and item, count (nrow) and get the unique values on task and item
+subsPerTaskItem = unique(combine(groupby(subs, [:task, :item]), :, nrow), [:task, :item]);
+# Group by task and segment (item,start,ending), count and get unique values.
+subsPerTaskUnique = unique(combine(groupby(subs, [:task, :item, :start, :ending]), :, nrow), [:task, :item, :start, :ending]);
+
+# Get the extrema per task (i.e. max and min per task and unique segments
+stats = combine(groupby(subsPerTaskUnique, [:task]), :nrow => (x -> [extrema(x)]) => [:min, :max]);
+# join on the task and max to get the segement (item,start,ending) (and do some projection to only have relevant information)
+statsWithItem = innerjoin(subsPerTaskUnique, stats, on= [:task => :task, :nrow => :max])[:,[:task, :item, :start, :ending, :status, :nrow]];
