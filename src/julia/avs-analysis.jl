@@ -107,8 +107,43 @@ save("plots/avs-team-ratios-correct.pdf", cfig);
 subsPerTaskItem = unique(combine(groupby(subs, [:task, :item]), :, nrow), [:task, :item]);
 # Group by task and segment (item,start,ending), count and get unique values.
 subsPerTaskUnique = unique(combine(groupby(subs, [:task, :item, :start, :ending]), :, nrow), [:task, :item, :start, :ending]);
+csubsPerTaskUnique = unique(combine(groupby(filter(:status => s->s == "CORRECT", subs), [:task, :item, :start, :ending]), :, nrow), [:task, :item, :start, :ending]);
+wsubsPerTaskUnique = unique(combine(groupby(filter(:status => s->s == "WRONG", subs), [:task, :item, :start, :ending]), :, nrow), [:task, :item, :start, :ending]);
 
 # Get the extrema per task (i.e. max and min per task and unique segments
 stats = combine(groupby(subsPerTaskUnique, [:task]), :nrow => (x -> [extrema(x)]) => [:min, :max]);
+cstats =combine(groupby(csubsPerTaskUnique, [:task]), :nrow => (x -> [extrema(x)]) => [:min, :max]);
+wstats =combine(groupby(wsubsPerTaskUnique, [:task]), :nrow => (x -> [extrema(x)]) => [:min, :max]);
 # join on the task and max to get the segement (item,start,ending) (and do some projection to only have relevant information)
-statsWithItem = innerjoin(subsPerTaskUnique, stats, on= [:task => :task, :nrow => :max])[:,[:task, :item, :start, :ending, :status, :nrow]];
+statsWithItem = innerjoin(subsPerTaskUnique, stats, on= [:task => :task, :nrow => :max])[:,[:task, :item, :start, :ending, :status, :nrow]]
+cstatsWithItem = innerjoin(csubsPerTaskUnique, cstats, on= [:task => :task, :nrow => :max])[:,[:task, :item, :start, :ending, :status, :nrow]]
+wstatsWithItem = innerjoin(wsubsPerTaskUnique, wstats, on= [:task => :task, :nrow => :max])[:,[:task, :item, :start, :ending, :status, :nrow]]
+
+
+# ---------------------------------------------------
+# Analysis of submission density
+# ---------------------------------------------------
+avsSubs = DataFrame(CSV.File("data/processed/avs-submissions.csv"));
+avsSubs.task = categorical(avsSubs.task);
+avsSubs.time = avsSubs.time ./ 1000;
+subsPerTask = groupby(avsSubs, [:task]);
+csubsPerTask = groupby(filter(:status => s->s == "CORRECT", avsSubs), [:task]);
+
+avsTasks = levels(avsSubs.task)
+
+# Sampling color scheme. values must be between 0 and 1, hence the division
+densityColors = get(ColorSchemes.roma, collect(0:1/(length(avsTasks)-1):1));
+
+densityFigure = Figure();
+densityCFigure = Figure();
+densityAxis = Axis(densityFigure[1,1], xlabel="seconds", ylabel="density", title="Submission Density Estimate");
+densityCAxis = Axis(densityCFigure[1,1], xlabel="seconds", ylabel="density", title="Correct Submission Density Estimate");
+for i in 1:length(avsTasks)
+    density!(densityAxis, subsPerTask[i][:,:time], color=:transparent, strokecolor= densityColors[i], strokewidth=2, label=avsTasks[i]);
+    density!(densityCAxis, csubsPerTask[i][:,:time], color=:transparent, strokecolor= densityColors[i], strokewidth=2, label=avsTasks[i]);
+end
+densityElements = [LineElement(color = densityColors[i], linestyle=nothing) for i in 1:length(avsTasks)];
+densityFigure[1,2] = Legend(densityFigure, densityElements, avsTasks, "Legend");
+densityCFigure[1,2] = Legend(densityCFigure, densityElements, avsTasks, "Legend");
+save("plots/avs-submission-density.pdf", densityFigure);
+save("plots/avs-submission-correct-density.pdf", densityCFigure);
