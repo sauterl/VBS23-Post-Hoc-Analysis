@@ -1,0 +1,9 @@
+numpy
+matplotlib
+adjustText
+pandas
+tqdm
+pyyaml
+seaborn
+opencv-python
+ipykernel
