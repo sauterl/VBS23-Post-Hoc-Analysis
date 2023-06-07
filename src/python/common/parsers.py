@@ -76,9 +76,8 @@ class TeamLogParser():
 
         def decode_segment(x):
             if isinstance(x['videoId'], str) and '_' in x['videoId']:
-                # format HH;MM,SS;FF. Use the frames (FF)
-                frame = x['segment']    # in the segment there is the frame
-                time = self.v3c_videos.get_shot_time_from_video_and_frame(x['videoId'], frame)
+                # the segment is the index of the keyframe (each keyframe in MVK is a different segment for vitrivr)
+                time = (x['segment'] - 1) * 1000
             else:
                 time = self.v3c_videos.get_shot_time_from_video_and_segment(x['videoId'], x['segment'], method='middle_frame')
             return time
