@@ -85,9 +85,9 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Read already processed logs and transform in the common pandas dataframe format')
-    parser.add_argument('--input_file', default='data/2023/team_logs/vitrivr-vr/result_log_ranks_vitrivr_vr.csv')
-    parser.add_argument('--output_path', default='processed/team_logs/2023')
-    parser.add_argument('--config', default='config_vbs2023.yaml', help='config file to generate the graph')
+    parser.add_argument('--input_file', default='data/logs/team_logs/vitrivr-vr/result_log_ranks_vitrivr_vr.csv')
+    parser.add_argument('--output_path', default='data/processed/kis-logs')
+    parser.add_argument('--config', default='src/python/config_vbs2023.yaml', help='config file to generate the graph')
 
     args = parser.parse_args()
     main(args)
