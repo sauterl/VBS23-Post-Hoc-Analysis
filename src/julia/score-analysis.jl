@@ -41,6 +41,11 @@ submissions[!, :group] = replace.(submissions[:, :group], "vbs23-" => "")
 task_type_count = 4
 team_count = 13
 
+
+scores[scores[:, :team] .== "HTW", :team] .= "vibro"
+submissions[submissions[:, :team] .== "HTW", :team] .= "vibro"
+
+
 ## total scores
 score_sum = combine(groupby(scores, [:team, :group]), :score => sum)
 
@@ -68,13 +73,13 @@ ax = Axis(fig[1, 1],
 xlabel = "Team",
 ylabel = "Score",
 xticks = (1:team_count, team_names),
-yticks = 0:500:4000,
+yticks = 0:200:1000,
 xticklabelrotation = pi/4,
 title = "")
 
 barplot!(
     pos, score_sum_normalized[:, :score_sum],
-    stack = grp,
+    dodge = grp,
     color = colors[grp]
 )
 
@@ -98,7 +103,7 @@ sort!(submissions_per_team, [:group, :status])
 submissions_per_team = @rorderby submissions_per_team findfirst(==(:team), oder)
 
 kis = submissions_per_team[submissions_per_team[:, :group] .!== "AVS", :]
-kis[!, :key] = map(x -> "$(x[:group]) - $(x[:status])", eachrow(kis))
+kis[!, :key] = map(x -> "$(x[:group]) - $( x[:status] == "CORRECT" ? "Correct" : "Total" )", eachrow(kis))
 
 #hack to populate missing combinations with 0
 h = collect(Iterators.product(unique(kis[:, :team]), unique(kis[:, :key])))[:]
@@ -207,11 +212,9 @@ yticks = (0:1:8),
 xticklabelrotation = pi/4,
 title = "")
 
-boxplot!(ax, xs, time_to_first_submission[:, :first],
-dodge = dodge,
-color = colors[dodge],
-gap = 0.4
-)
+points = Point2f.(xs .+ (0.15 .* dodge) .- 0.375, time_to_first_submission[:, :first])
+
+scatter!(ax, points, color = colors[dodge])
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
@@ -242,11 +245,9 @@ yticks = (0:1:8),
 xticklabelrotation = pi/4,
 title = "")
 
-boxplot!(ax, xs, time_to_first_correct_submission[:, :first],
-dodge = dodge,
-color = colors[dodge],
-gap = 0.4
-)
+points = Point2f.(xs .+ (0.15 .* dodge) .- 0.375, time_to_first_correct_submission[:, :first])
+
+scatter!(ax, points, color = colors[dodge])
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
