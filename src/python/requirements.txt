@@ -7,3 +7,4 @@ pyyaml
 seaborn
 opencv-python
 ipykernel
+jinja2
