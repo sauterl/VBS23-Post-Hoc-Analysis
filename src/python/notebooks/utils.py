@@ -94,8 +94,14 @@ def get_team_values_df(data, df, split_users=False, max_rank=10000):
 
         # for each (team, user, task), find the minimum ranks and the timestamps
         df=df.sort_values('timestamp')
-        best_video_df = df.loc[df.groupby(['team', 'user', 'task'])['rank_video'].idxmin()]
-        best_shot_df = df.loc[df.groupby(['team', 'user', 'task'])['rank_shot_margin_0'].idxmin()]
+        best_video_df = df.loc[
+                df[(df['correct_submission_time_ms'].isnull()) | (df['elapsed_since_task_start_ms'] < df['correct_submission_time_ms'])].groupby(
+                ['team', 'user', 'task'])['rank_video'].idxmin()
+                ]
+        best_shot_df = df.loc[
+                df[(df['correct_submission_time_ms'].isnull()) | (df['elapsed_since_task_start_ms'] < df['correct_submission_time_ms'])].groupby(
+                ['team', 'user', 'task'])['rank_shot_margin_0'].idxmin()
+                ]
         best_shot_df_5secs = df.loc[df.groupby(['team', 'user','task'])['rank_shot_margin_5'].idxmin()]
         # find also the time of first and last appearance of a result in the ranked list
         df_valid_rankshot = df[~df['rank_shot_margin_0'].isin([np.inf, -np.inf])]
