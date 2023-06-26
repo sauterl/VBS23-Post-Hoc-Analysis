@@ -5,6 +5,7 @@ using CairoMakie
 scores = CSV.read("data/raw/scores-vbsofficial2023.csv", DataFrame)
 scores = scores[scores[:, :team] .!== String15("unitedjudges"), :]
 scores[!, :task] = replace.(scores[:, :task], "vbs23-" => "")
+scores[scores[:, :team] .== "HTW", :team] .= "vibro"
 
 tasks = unique(scores[:, :task])
 scores[!, :task_nr] = map(x -> findfirst(h -> h == x, tasks), scores[:, :task])
@@ -61,7 +62,7 @@ colors = Dict(zip(team_names, get(ColorSchemes.corkO, collect(0:1/(team_count-1)
 
 #rank vs time
 fig = Figure()
-Axis(fig[1, 1], xlabel = "Task", ylabel = "Team Rank", yticks = 1:team_count, xticks = 1:task_count, yreversed = true)
+Axis(fig[1, 1], xlabel = "Task", ylabel = "Team Rank", yticks = 1:team_count, xticks = 2:2:task_count, xminorticks = IntervalsBetween(2), xminorgridvisible = true, yreversed = true)
 for g in groupby(score_sums_normalized, :team)
     lines!( g[:, :task_nr],  g[:, :rank], color = colors[g[1, :team]], linewidth = 2)
 end
@@ -73,7 +74,7 @@ save("plots/team_rank_vs_time.pdf", fig)
 
 #normalized score vs time
 fig = Figure()
-Axis(fig[1, 1], xlabel = "Task", ylabel = "Normalized total score", yticks = 0:500:(1000*length(task_groups)), xticks = 1:task_count)
+Axis(fig[1, 1], xlabel = "Task", ylabel = "Normalized total score", yticks = 0:500:(1000*length(task_groups)), xticks = 2:2:task_count, xminorticks = IntervalsBetween(2), xminorgridvisible = true,)
 for g in groupby(score_sums_normalized, :team)
     lines!( g[:, :task_nr],  g[:, :sum], color = colors[g[1, :team]], linewidth = 2)
 end
