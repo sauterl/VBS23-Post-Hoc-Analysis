@@ -29,3 +29,6 @@ __pycache__/
 
 # raw team logs for KIS processing (should be downloaded instead from external server)
 data/logs/team_logs
+
+# Ignore ipynb_checkpoint directories
+**/ipynb_checkpoint/
