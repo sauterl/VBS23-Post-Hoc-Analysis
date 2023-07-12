@@ -202,6 +202,10 @@ xs = map(x -> get(team_to_id, x, 0), time_to_first_submission[:, :team])
 type_to_id = Dict(["AVS" => 1, "KIS-T" => 2, "KIS-V" => 3, "KIS-V-M" => 4])
 dodge = map(x -> get(type_to_id, x, 0), time_to_first_submission[:, :group])
 
+marker_dict = Dict(1 => :circle, 2 => :rect, 3 => :diamond, 4 => :star4)
+
+marker = map(x -> marker_dict[x], dodge)
+
 fig = Figure()
 
 ax = Axis(fig[1, 1],
@@ -214,7 +218,7 @@ title = "")
 
 points = Point2f.(xs .+ (0.15 .* dodge) .- 0.375, time_to_first_submission[:, :first])
 
-scatter!(ax, points, color = colors[dodge])
+scatter!(ax, points, color = colors[dodge], marker = marker)
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
@@ -235,6 +239,8 @@ time_to_first_correct_submission = @rorderby time_to_first_correct_submission fi
 xs = map(x -> get(team_to_id, x, 0), time_to_first_correct_submission[:, :team])
 dodge = map(x -> get(type_to_id, x, 0), time_to_first_correct_submission[:, :group])
 
+marker = map(x -> marker_dict[x], dodge)
+
 fig = Figure()
 
 ax = Axis(fig[1, 1],
@@ -247,7 +253,7 @@ title = "")
 
 points = Point2f.(xs .+ (0.15 .* dodge) .- 0.375, time_to_first_correct_submission[:, :first])
 
-scatter!(ax, points, color = colors[dodge])
+scatter!(ax, points, color = colors[dodge], marker = marker)
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
