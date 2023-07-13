@@ -1,5 +1,7 @@
 using CSV, DataFrames, CairoMakie, CategoricalArrays, Statistics;
 using ColorSchemes, ColorBrewer;
+include("./src/julia/vbsanalysis.lib.jl")
+using .VbsAnalysis
 
 subs = DataFrame(CSV.File("data/processed/avs-submissions.csv"));
 
@@ -15,19 +17,12 @@ df = innerjoin(subsPerTaskTeam, totals, on = :task);
 # Calculate ratio total per task and team / totals
 df.ratio = df.nrow ./ df.sum;
 
+# Clean HTW to vibro name
+df.team = replace.(df.team, "HTW" => "vibro")
+
 # Makie works better with categorical arrays, hence we convert the relevant columns to categorical
 df.task = categorical(df.task);
 df.team = categorical(df.team);
-
-# Plotting - General setup to be consistent
-# Labels: Replacing name to be consistent with output from latex table generation
-labels = replace.(levels(df.task), "vbs23-avs" => "a");
-# The teams as a vector of unique values
-teams = levels(df.team);
-# Sampling color scheme. values must be between 0 and 1, hence the division
-colors = get(ColorSchemes.cork, collect(0:1/(length(teams)-1):1));
-# Elements for the Legend. Basically mapping of colour and labels, hence the same sampling.
-elements = [PolyElement(markercolor = i, linecolor = i, polycolor = i) for i in colors[1:length(teams)]];
 
 # Plotting setup
 fig = Figure();
@@ -39,17 +34,21 @@ xticks = (                      # The x ticks
 title="Shares of submissions per team and task"
 );
 # Makie stacked barplot of the shares of submissions per team and task
+
+# Use sorting of official ranks at the end. team_names are sorted and since stacks are inverted, we use this numbering
+stacks = maximum(indexin(df.team, team_names))+1 .- indexin(df.team,team_names)
+
 barplot!(ax,                    # The axis
     df.task.refs,               # The x values, must be numerical, hence the refs. Multiple equal X values result in stacks
     df.ratio,                   # The Y values, must be numerical, this is the share of submissions of a team (bar) for the given task (x tick)
-    stack=df.team.refs,         # Numerical value of stack ordering
-    color=colors[df.team.refs], # Numerical colour value within the theme (we use the same values as for the stacking)
+    stack=stacks,         # Numerical value of stack ordering
+    color=[team_colours[t] for t in df.team],     # Numerical colour value within the theme (we use the same values as for the stacking)
     #bar_labels=df.team         # Apparently, categorical array works here, basically all the labels for all the bars (remember, they get stacked) # DISABLED, since unreadable
 );
 # The Legend with reversed entries due to the way of the stacking
 Legend(fig[1,2],       # Placement within the figure: to the right of fig[1,1]
-    reverse(elements),  # Colour elements aka squares
-    reverse(teams),     # The labels, i.e. the teams
+    team_legendelements,  # Colour elements aka squares
+    team_names,     # The labels, i.e. the teams
     "Teams"             # Title of the legend
     );
 
@@ -68,10 +67,13 @@ ctotals = combine(groupby(csubsPerTaskTeam, [:task]), :nrow .=> sum => :sum);
 cdf = innerjoin(csubsPerTaskTeam, ctotals, on = :task);
 # Calculate ratio total per task and team / totals
 cdf.ratio = cdf.nrow ./ cdf.sum;
-
+# Clean Team naming
+cdf.team = replace.(cdf.team, "HTW" => "vibro")
 # Makie works better with categorical arrays, hence we convert the relevant columns to categorical
 cdf.task = categorical(cdf.task);
 cdf.team = categorical(cdf.team);
+
+cstacks = maximum(indexin(cdf.team, team_names))+1 .- indexin(cdf.team,team_names)
 
 # Plotting setup
 cfig = Figure();
@@ -86,14 +88,14 @@ title="Shares of submissions per team and task"
 barplot!(cax,                    # The axis
 cdf.task.refs,               # The x values, must be numerical, hence the refs. Multiple equal X values result in stacks
 cdf.ratio,                   # The Y values, must be numerical, this is the share of submissions of a team (bar) for the given task (x tick)
-stack=cdf.team.refs,         # Numerical value of stack ordering
-color=colors[cdf.team.refs], # Numerical colour value within the theme (we use the same values as for the stacking)
+stack=cstacks,         # Numerical value of stack ordering
+color=[team_colours[t] for t in cdf.team], # Numerical colour value within the theme (we use the same values as for the stacking)
 #bar_labels=df.team         # Apparently, categorical array works here, basically all the labels for all the bars (remember, they get stacked) # DISABLED, since unreadable
 );
 # The Legend with reversed entries due to the way of the stacking
 Legend(cfig[1,2],       # Placement within the figure: to the right of fig[1,1]
-reverse(elements),  # Colour elements aka squares
-reverse(teams),     # The labels, i.e. the teams
+team_legendelements,  # Colour elements aka squares
+team_names,     # The labels, i.e. the teams
 "Teams"             # Title of the legend
 );
 
