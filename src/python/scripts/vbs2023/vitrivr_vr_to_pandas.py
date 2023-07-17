@@ -63,7 +63,7 @@ def main(args):
 
     events_df['correct_submission_time_ms'] = correct_submission_time - task_start
     # remove rows where "elapsed_since_task_start_ms" is higher than "correct_submission_time_ms" (this happens when the user submits after the task has ended)
-    events_df = events_df[events_df['elapsed_since_task_start_ms'] <= events_df['correct_submission_time_ms']]
+    events_df = events_df[(events_df['elapsed_since_task_start_ms'] <= events_df['correct_submission_time_ms']) | (events_df['correct_submission_time_ms'].isna())]
     
     events_df = events_df.filter(['task', 'team', 'user', 'timestamp', 'elapsed_since_task_start_ms', 'correct_submission_time_ms', 'rank_video', 'rank_shot_margin_0', 'rank_shot_margin_5', 'category', 'type', 'value','additionals' ])
 
