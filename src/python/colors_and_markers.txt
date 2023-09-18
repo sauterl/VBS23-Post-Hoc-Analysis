@@ -1,0 +1,19 @@
+team2color = {
+    'vibro'     : '#1f77b4',
+    'VISIONE'   : '#ff7f0e',
+    'VIREO'     : '#2ca02c',
+    'vitrivr-VR': '#d62728',
+    'CVHunter'  : '#9467bd',
+    'vitrivr'   : '#8c564b',
+    'Verge'     : '#e377c2',
+}
+
+team2marker = {
+    'vibro'     : 'D',
+    'VISIONE'   : 'X',
+    'VIREO'     : 'o', 
+    'vitrivr-VR': '*',
+    'CVHunter'  : 'd',
+    'vitrivr'   : 'P',
+    'Verge'     : 's',
+}
