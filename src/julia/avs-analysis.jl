@@ -141,7 +141,7 @@ cidf.ratio,                   # The Y values, must be numerical, this is the sha
 stack=cistacks,         # Numerical value of stack ordering
 color=[team_colours[t] for t in cidf.team], # Numerical colour value within the theme (we use the same values as for the stacking)
 #bar_labels=df.team         # Apparently, categorical array works here, basically all the labels for all the bars (remember, they get stacked) # DISABLED, since unreadable
-strokecolor= :white, # Have a white border and see whether this makes it more readable
+# strokecolor= :white, # Have a white border and see whether this makes it more readable
 #strokewidth= 0.1, # have a width for the stroke to enhance readability # this looks horrible
 #offset= 0.1,
 );
