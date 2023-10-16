@@ -111,14 +111,16 @@ save("plots/avs-team-ratios-correct.pdf", cfig);
 csubsPerTaskTeamItems = unique(combine(groupby(csubs, [:task, :team, :item]), :, nrow), [:task, :team, :item]);
 # We want to only count one submission per item (technically the first, however we are calculating ratios here, so it doesn't matter
 csubsPerTaskTeamItems.nrow .= 1;
+# Like previously, aggregate on task-team uniqueness
+cisubSperTaskTeam = unique(combine(groupby(csubsPerTaskTeamItems, [:task,:team]), : ,nrow), [:task, :team]);
 # Sum up to get the total of the submissions per task and rename to sum
-citotals = combine(groupby(csubsPerTaskTeamItems, [:task]), :nrow .=> sum => :sum);
+citotals = combine(groupby(cisubSperTaskTeam, [:task]), :nrow .=> sum => :sum);
 # Join on the taks (name)
-cidf = innerjoin(csubsPerTaskTeamItems, citotals, on = :task);
+cidf = innerjoin(cisubSperTaskTeam, citotals, on = :task);
 # Calculate ratio total per task and team / totals
 cidf.ratio = cidf.nrow ./ cidf.sum;
 # Clean Team naming
-cidf.team = replace.(cidf.team, "HTW" => "vibro")
+cidf.team = replace.(cidf.team, "HTW" => "vibro");
 # Makie works better with categorical arrays, hence we convert the relevant columns to categorical
 cidf.task = categorical(cidf.task);
 cidf.team = categorical(cidf.team);
@@ -141,8 +143,8 @@ cidf.ratio,                   # The Y values, must be numerical, this is the sha
 stack=cistacks,         # Numerical value of stack ordering
 color=[team_colours[t] for t in cidf.team], # Numerical colour value within the theme (we use the same values as for the stacking)
 #bar_labels=df.team         # Apparently, categorical array works here, basically all the labels for all the bars (remember, they get stacked) # DISABLED, since unreadable
-# strokecolor= :white, # Have a white border and see whether this makes it more readable
-#strokewidth= 0.1, # have a width for the stroke to enhance readability # this looks horrible
+strokecolor= :white, # Have a white border and see whether this makes it more readable
+strokewidth= 0.1, # have a width for the stroke to enhance readability # this looks horrible
 #offset= 0.1,
 );
 # The Legend with reversed entries due to the way of the stacking
