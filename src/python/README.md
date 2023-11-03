@@ -6,6 +6,7 @@ Hopefully, this repo will help to analyze also the logs from the future versions
 ## Data Preparation
 First of all, run the following command. This will extract log data from 2023 teams and will prepare the environment. Some data are collected from the local logs of the systems, others from the public [run file](https://github.com/lucaro/VBS-Archive/tree/main/2023) of the [DRES](https://github.com/dres-dev/DRES) server.
 ```
+cd src/python
 ./prepare.sh
 source venv/bin/activate
 ```

@@ -8,3 +8,5 @@ seaborn
 opencv-python
 ipykernel
 jinja2
+openpyxl
+requests
