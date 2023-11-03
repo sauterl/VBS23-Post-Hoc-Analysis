@@ -1,24 +1,24 @@
 teams: ['HTW', 'VISIONE', 'VIREO', 'vitrivr-VR', 'CVHunter', 'vitrivr', 'Verge', 'VideoCLIP'] #, 'FIRST']
 
-audits_file: data/raw/vbs23_audits.json
-run_file: data/raw/vbs23_run.json
+audits_file: ../../data/raw/vbs23_audits.json
+run_file: ../../data/raw/vbs23_run.json
 fps_files: 
- - data/datasets_metadata/v3c1_2_fps.csv
- - data/datasets_metadata/mvk_fps.csv
+ - ../../data/datasets_metadata/v3c1_2_fps.csv
+ - ../../data/datasets_metadata/mvk_fps.csv
 segment_files:
- - data/datasets_metadata/v3c1_frame_segments.csv
- - data/datasets_metadata/v3c2_frame_segments.csv
- - data/datasets_metadata/mvk_frame_segments.csv
+ - ../../data/datasets_metadata/v3c1_frame_segments.csv
+ - ../../data/datasets_metadata/v3c2_frame_segments.csv
+ - ../../data/datasets_metadata/mvk_frame_segments.csv
 
 logs:
-  VISIONE: data/logs/team_logs/VISIONE # data/2023/team_logs/from_dres/visione
-  vitrivr: data/logs/team_logs/from_dres/vitrivr
-  VideoCLIP: data/logs/team_logs/from_dres/videoclip
-  Verge: data/logs/team_logs/from_dres/verge
-  VIREO: data/logs/team_logs/VIREO
-  HTW: data/logs/team_logs/vibro
-  FIRST: data/logs/team_logs/FIRST
+  VISIONE: ../../data/logs/team_logs/VISIONE # data/2023/team_logs/from_dres/visione
+  vitrivr: ../../data/logs/team_logs/vitrivr
+  VideoCLIP: ../../data/logs/team_logs/videoclip
+  Verge: ../../data/logs/team_logs/verge
+  VIREO: ../../data/logs/team_logs/VIREO
+  HTW: ../../data/logs/team_logs/vibro
+  FIRST: ../../data/logs/team_logs/FIRST
   vitrivr-VR: null
   CVHunter: null
 
-processed_logs_outdir: data/processed/kis-logs
+processed_logs_outdir: ../../data/processed/kis-logs

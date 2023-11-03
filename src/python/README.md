@@ -4,14 +4,30 @@ This repo provides a good code base for extracting and analyzing the logs from t
 Hopefully, this repo will help to analyze also the logs from the future versions of VBS.
 
 ## Data Preparation
-First of all, run the following command. This will extract log data from 2023 teams and will prepare the environment. Some data are collected from the local logs of the systems, others from the public [run file](https://github.com/lucaro/VBS-Archive/tree/main/2022) of the [DRES](https://github.com/dres-dev/DRES) server.
+First of all, run the following command. This will extract log data from 2023 teams and will prepare the environment. Some data are collected from the local logs of the systems, others from the public [run file](https://github.com/lucaro/VBS-Archive/tree/main/2023) of the [DRES](https://github.com/dres-dev/DRES) server.
 ```
 ./prepare.sh
 source venv/bin/activate
 ```
 
 ## Run the notebooks
-TODO
+Move into `src/python` path (if not already there), and run the following:
+```
+jupyter notebook
+```
+
+Then, select the kernel named `VBS2023` before running any notebook.
+
+**NOTE**: for correctly running the notebooks, be sure your jupyter notebook is rooted in `src/python`, otherwise you will encounter some issues.
+
+## Generating CSVs from raw logs
+The processed csv files are already inside the `data/processed/kis-logs` directory. However, there may be the case in which you need to recompute them from the raw files.
+
+In such a case, you have to run the following:
+```
+./process_logs.sh
+```
+
 
 ## Contributors
 

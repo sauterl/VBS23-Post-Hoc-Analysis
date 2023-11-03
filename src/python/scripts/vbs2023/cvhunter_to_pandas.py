@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import argparse
 import sys
-import json
+
 sys.path.append(".")
 
 from common.load import load_competition_data, load_data

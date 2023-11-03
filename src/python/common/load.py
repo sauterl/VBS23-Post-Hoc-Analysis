@@ -37,7 +37,7 @@ def load_competition_data(config, teams_override=None):
 
     return competition_data
 
-def process_team_logs(config, competition_data, force=False, teams_override=None):
+def process_team_logs(config, competition_data, force=False, teams_override=None, remove_none=True):
     # create or load logs, for each team
     # load config file for this plot
     with open(config, 'r') as f:
@@ -49,6 +49,9 @@ def process_team_logs(config, competition_data, force=False, teams_override=None
         teams = teams_override
     else:
         teams = cfg["teams"]
+
+    if remove_none:
+        teams = [team for team in teams if cfg['logs'][team] is not None]
 
     for team in tqdm.tqdm(teams, desc='Loading (or generating) intermediate DataFrames'):
         team_log = TeamLogs(

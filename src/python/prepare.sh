@@ -1,14 +1,18 @@
 #!/bin/bash
 
 # Download and extract team logs
-wget http://cloudone.isti.cnr.it/VBS2022_KIS_logs/team_logs.zip
-unzip team_logs.zip -d data/2022/
-rm team_logs.zip
+
+# If team_logs.zip does not exist, download and extract it
+if [ ! -d ../../data/logs/team_logs ]; then
+    wget -L https://github.com/sauterl/VBS23-Post-Hoc-Analysis/releases/download/logs/team_logs.zip
+    unzip team_logs.zip -d ../../data/logs
+    rm team_logs.zip
+fi
 
 # Create a virtual environment and install requirements
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Convert CVHunter
-# python scripts/cvhunter_to_pandas.py --input_file data/2022/team_logs/CVHunter/CVHunter_filtered_data.csv --output_path cache/team_logs/2022
+# Install the kernel for jupyter notebooks
+python -m ipykernel install --user --name vbs2023 --display-name "VBS2023"

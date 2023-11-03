@@ -26,9 +26,10 @@ Manifest.toml
 # Python specific
 __pycache__/
 *.py[cod]
+**/venv
 
 # raw team logs for KIS processing (should be downloaded instead from external server)
-data/logs/team_logs
+data/logs/team_logs*
 
 # Ignore ipynb_checkpoint directories
 **/ipynb_checkpoint/
