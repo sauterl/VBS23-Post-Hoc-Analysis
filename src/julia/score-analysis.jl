@@ -1,5 +1,5 @@
 using JSON, CSV, DataFrames, DataFramesMeta
-using ColorSchemes, ColorBrewer
+using ColorSchemes, ColorBrewer, Colors
 using CairoMakie
 
 run = JSON.parsefile("data/raw/vbs23_run.json")
@@ -65,7 +65,7 @@ pos = collect(Iterators.flatten(([[i, i, i, i] for i in 1:team_count])))
 grp = collect(Iterators.flatten(([[1, 2, 3, 4] for i in 1:team_count])))
 team_names = unique(score_sum_normalized[:, :team])
 
-colors = palette("Set1", task_type_count)
+colors = get(ColorSchemes.romaO, collect(0:1/(task_type_count * 2):1))[1:2:end-1]
 
 fig = Figure()
 
@@ -118,8 +118,8 @@ pos = collect(Iterators.flatten(([[i, i, i, i, i, i] for i in 1:team_count])))
 dodge = collect(Iterators.flatten(([[1, 1, 2, 2, 3, 3] for i in 1:team_count])))
 stack = collect(Iterators.flatten(([[1, 1, 1, 1, 1, 1] for i in 1:team_count])))
 col = collect(Iterators.flatten(([[1, 2, 3, 4, 5, 6] for i in 1:team_count])))
-colors = palette("Paired", 10)
-colors = colors[[2,1,4,3,10,9]]
+colors = get(ColorSchemes.romaO, collect(0:1/(task_type_count * 2):1))[3:2:end-1]
+colors = collect(Iterators.flatten(zip(colors, map(x -> HSV(x.h, x.s - 0.4, x.v -.1), convert.(HSV, colors)))))
 
 fig = Figure()
 
@@ -157,7 +157,7 @@ avs = @rorderby avs findfirst(==(:team), oder)
 
 pos = collect(Iterators.flatten(([[i, i, i] for i in 1:team_count])))
 grp = collect(Iterators.flatten(([[1, 2, 3] for i in 1:team_count])))
-colors = palette("Set2", 4)
+colors = get(ColorSchemes.hawaii, collect(0:1/(task_type_count * 2):1))[1:2:end-1]
 
 fig = Figure()
 
@@ -194,7 +194,7 @@ sort!(time_to_first_submission, :group)
 time_to_first_submission = @rorderby time_to_first_submission findfirst(==(:team), oder)
 
 
-colors = palette("Set1", 4)
+colors = get(ColorSchemes.romaO, collect(0:1/(task_type_count * 2):1))[1:2:end-1]
 
 team_to_id = Dict(zip(oder, collect(1:team_count)))
 xs = map(x -> get(team_to_id, x, 0), time_to_first_submission[:, :team])
@@ -222,7 +222,7 @@ scatter!(ax, points, color = colors[dodge], marker = marker)
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
-Legend(fig[2,1], [PolyElement(polycolor = colors[i]) for i in 1:4], labels, "Task Type", orientation = :horizontal, framevisible = false)
+Legend(fig[2,1], [MarkerElement(color = colors[i], marker = marker_dict[i]) for i in 1:4], labels, "Task Type", orientation = :horizontal, framevisible = false)
 
 save("plots/time_to_first_submission.pdf", fig)
 
@@ -257,6 +257,6 @@ scatter!(ax, points, color = colors[dodge], marker = marker)
 
 labels = ["AVS", "KIS-T", "KIS-V", "KIS-V-M"]
 
-Legend(fig[2,1], [PolyElement(polycolor = colors[i]) for i in 1:4], labels, "Task Type", orientation = :horizontal, framevisible = false)
+Legend(fig[2,1], [MarkerElement(color = colors[i], marker = marker_dict[i]) for i in 1:4], labels, "Task Type", orientation = :horizontal, framevisible = false)
 
 save("plots/time_to_first_correct_submission.pdf", fig)

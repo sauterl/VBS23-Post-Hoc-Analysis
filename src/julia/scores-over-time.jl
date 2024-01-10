@@ -59,15 +59,17 @@ team_names = sort(groupby(score_sums_normalized, :task_nr)[end], :sum, rev = tru
 
 colors = Dict(zip(team_names, get(ColorSchemes.corkO, collect(0:1/(team_count-1):1))))
 
+linetypes = Dict(zip(team_names, [:solid, :dash, :dot, :solid, :dash, :dot, :solid, :dash, :dot, :solid, :dash, :dot, :solid, :dash]))
+
 
 #rank vs time
 fig = Figure()
 Axis(fig[1, 1], xlabel = "Task", ylabel = "Team Rank", yticks = 1:team_count, xticks = 2:2:task_count, xminorticks = IntervalsBetween(2), xminorgridvisible = true, yreversed = true)
 for g in groupby(score_sums_normalized, :team)
-    lines!( g[:, :task_nr],  g[:, :rank], color = colors[g[1, :team]], linewidth = 2)
+    lines!( g[:, :task_nr],  g[:, :rank], color = colors[g[1, :team]], linewidth = 2, linestyle = linetypes[g[1, :team]])
 end
 
-Legend(fig[1,2], [PolyElement(polycolor = colors[t]) for t in team_names], team_names, "Team", orientation = :vertical, framevisible = false)
+Legend(fig[1,2], [LineElement(color = colors[t], linestyle = linetypes[t], linewidth = 2) for t in team_names], team_names, "Team", orientation = :vertical, framevisible = false)
 
 save("plots/team_rank_vs_time.pdf", fig)
 
@@ -76,9 +78,9 @@ save("plots/team_rank_vs_time.pdf", fig)
 fig = Figure()
 Axis(fig[1, 1], xlabel = "Task", ylabel = "Normalized total score", yticks = 0:500:(1000*length(task_groups)), xticks = 2:2:task_count, xminorticks = IntervalsBetween(2), xminorgridvisible = true,)
 for g in groupby(score_sums_normalized, :team)
-    lines!( g[:, :task_nr],  g[:, :sum], color = colors[g[1, :team]], linewidth = 2)
+    lines!( g[:, :task_nr],  g[:, :sum], color = colors[g[1, :team]], linewidth = 2, linestyle = linetypes[g[1, :team]])
 end
 
-Legend(fig[1,2], [PolyElement(polycolor = colors[t]) for t in team_names], team_names, "Team", orientation = :vertical, framevisible = false)
+Legend(fig[1,2], [LineElement(color = colors[t], linestyle = linetypes[t], linewidth = 2) for t in team_names], team_names, "Team", orientation = :vertical, framevisible = false)
 
 save("plots/normalized_score_vs_time.pdf", fig)
